@@ -151,8 +151,17 @@ class import_model(object):
             return lasagne.layers.ConcatLayer([l_forward, l_backward], axis=-1)
 
         input_var = T.tensor3('X')
-        network = lasagne.layers.InputLayer((None, None, self._dim_point*self._num_joints), input_var)
-        network = bi_direction_lstm(network, 512, only_return_final=False)
+        new_slic_idx = [it*self._dim_point for it in [0, 6, 6, 4, 4, 5] ]
+        new_slic_idx = np.cumsum(new_slic_idx )
+        net_list = []
+        input_data = lasagne.layers.InputLayer((none, none, new_slic_idx[-1]), input_var)
+        input_data = lasagne.layers.InputLayer((None, None, new_slic_idx[-1]), input_var)
+        for slc_id in xrange(0, len(new_slic_idx)-1):
+            data_per = lasagne.layers.SliceLayer(input_data, indices=slice(new_slic_idx[slc_id], new_slic_idx[slc_id+1]), axis=-1)
+            rnn_per = bi_direction_lstm(data_per, 256, only_return_final=False)
+            # rnn_per = bi_direction_lstm(data_per, 256, only_return_final=False)
+            net_list.append(rnn_per)
+        network = lasagne.layers.ConcatLayer(net_list, axis=-1)
         network = bi_direction_lstm(network, 512, only_return_final=False)
         network = lasagne.layers.ExpressionLayer(network, lambda X: X.max(1), output_shape='auto')
         network = lasagne.layers.DenseLayer(lasagne.layers.dropout(network, 0.5), self._num_class, nonlinearity=softmax)
@@ -179,8 +188,8 @@ def run_model():
 
     param['tst_arr_file'] = 'data/subj_seq/array_list_train.h5'
     param['tst_lst_file'] = 'data/subj_seq/file_list_train.txt'
-    param['initial_file'] = 'data/link_to_model'
-
+    param['initial_file'] = 'data/subj_seq/save_param/part_epoch4.h5'
+    param['batchsize'] = 256 # 256
     param['num_seq'] = 100
     param['step'] = 1
     param['rand_start'] = True
