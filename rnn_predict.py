@@ -179,8 +179,12 @@ class import_model(object):
             val_predictions = np.zeros((0, self._num_class))
             for x, y in self.iterate_minibatches(valX, valY, self._param['batchsize'], shuffle=False):
                 val_predictions = np.concatenate((val_predictions, predict_fn(x)), axis=0)
-            save_name='data/result.mat'
-            savemat(save_name, mdict={'predictions':val_predictions, 'gt_label':valY} )
+            pred_val = np.argmax(val_predictions, axis=1)
+            # print ('evluation epoch=%d/%d, accuracy=%f' % (epoch, self._param['max_iter'],
+                        # (sum( int(pred_val[i]) == valY[i] for i in xrange(len(pred_val))) / float(len(pred_val)) )) )
+            for i in range(len(pred_val)):
+                print pred_val[i]
+
 
 
 def run_model():
@@ -199,6 +203,7 @@ def run_model():
     param['scale']=False
     param['smooth']=False
 
+    param['max_iter'] = 2000
     model = import_model(param)
     model.predict()
 
