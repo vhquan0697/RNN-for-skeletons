@@ -11,7 +11,7 @@ import lasagne.layers as layers
 from lasagne.nonlinearities import softmax, sigmoid, rectify
 
 class import_model(object):
-    def __init__(self, param, dim_point=3, num_joints=25, num_class=120):
+    def __init__(self, param, dim_point=3, num_joints=25, num_class=60):
         self._param = param
         self._dim_point = dim_point
         self._num_joints = num_joints
