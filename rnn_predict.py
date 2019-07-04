@@ -1,3 +1,4 @@
+import pdb
 import numpy as np
 import random
 import math
@@ -182,17 +183,83 @@ class import_model(object):
             pred_val = np.argmax(val_predictions, axis=1)
             # print ('evluation epoch=%d/%d, accuracy=%f' % (epoch, self._param['max_iter'],
                         # (sum( int(pred_val[i]) == valY[i] for i in xrange(len(pred_val))) / float(len(pred_val)) )) )
-            for i in range(len(pred_val)):
-                print pred_val[i]
+            # for i in range(len(pred_val)):
+            #     print pred_val[i]
 
+            # pdb.set_trace()
+            print len(pred_val)
+            print pred_val
+            list_of_action = [
+                "drink water.",
+                "eat meal/snack.",
+                "brushing teeth.",
+                "brushing hair.",
+                "drop.",
+                "pickup.",
+                "throw.",
+                "sitting down.",
+                "standing up (from sitting position).",
+                "clapping.",
+                "reading.",
+                "writing.",
+                "tear up paper.",
+                "wear jacket.",
+                "take off jacket.",
+                "wear a shoe.",
+                "take off a shoe.",
+                "wear on glasses.",
+                "take off glasses.",
+                "put on a hat/cap.",
+                "take off a hat/cap.",
+                "cheer up.",
+                "hand waving.",
+                "kicking something.",
+                "reach into pocket.",
+                "hopping (one foot jumping).",
+                "jump up.",
+                "make a phone call/answer phone.",
+                "playing with phone/tablet.",
+                "typing on a keyboard.",
+                "pointing to something with finger.",
+                "taking a selfie.",
+                "check time (from watch).",
+                "rub two hands together.",
+                "nod head/bow.",
+                "shake head.",
+                "wipe face.",
+                "salute.",
+                "put the palms together.",
+                "cross hands in front (say stop).",
+                "sneeze/cough.",
+                "staggering.",
+                "falling.",
+                "touch head (headache).",
+                "touch chest (stomachache/heart pain).",
+                "touch back (backache).",
+                "touch neck (neckache).",
+                "nausea or vomiting condition.",
+                "use a fan (with hand or paper)/feeling warm.",
+                "punching/slapping other person.",
+                "kicking other person.",
+                "pushing other person.",
+                "pat on back of other person.",
+                "point finger at the other person.",
+                "hugging other person.",
+                "giving something to other person.",
+                "touch other person's pocket.",
+                "handshaking.",
+                "walking towards each other.",
+                "walking apart from each other."
+            ]
+            print('predicted action is: ' + list_of_action[pred_val[0]])
 
 
 def run_model():
     param = {}
 
-    param['tst_arr_file'] = 'data/subj_seq/array_list_train.h5'
-    param['tst_lst_file'] = 'data/subj_seq/file_list_train.txt'
-    param['initial_file'] = 'data/subj_seq/save_param/part_epoch4.h5'
+    param['tst_arr_file'] = 'data/subj_seq/array_list_test.h5'
+    param['tst_lst_file'] = 'data/subj_seq/file_list_test.txt'
+    param['initial_file'] = 'data/subj_seq/part_epoch1996.h5'
     param['batchsize'] = 256 # 256
     param['num_seq'] = 100
     param['step'] = 1

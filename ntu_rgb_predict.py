@@ -139,8 +139,8 @@ class ntu_rgbd(object):
         return skeleton_set, pid_set, std_set
 
 if __name__ == '__main__':
-    #data_path = '/media/vhquan/APCS - Study/Thesis/Skeleton dataset/NTU RGB+D Dataset/nturgb+d_skeletons/'
-    data_path = 'duongdantoifileskeleton'
-    db = ntu_rgbd(data_path)
+    data_folder = '/home/ttson/Desktop/luongworkspace/RNN-for-skeletons-predict/skeleton'
+    file_name = 'S001C001P001R001A001.skeleton'
+    db = ntu_rgbd(data_folder)
     # db.load_skeleton_file('S011C001P028R001A034.skeleton')
-    db.save_h5_file_skeleton_list('data/subj_seq', [data_path], split='test')
+    db.save_h5_file_skeleton_list('data/subj_seq', [file_name], split='test')
