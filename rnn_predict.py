@@ -9,6 +9,7 @@ from theano import tensor as T
 import lasagne
 import lasagne.layers as layers
 from lasagne.nonlinearities import softmax, sigmoid, rectify
+from ntu_rgb_predict import ntu_rgb
 
 class import_model(object):
     def __init__(self, param, dim_point=3, num_joints=25, num_class=60):
@@ -188,7 +189,7 @@ class import_model(object):
 
             # pdb.set_trace()
             print len(pred_val)
-            print pred_val
+            print pred_val + 1
             list_of_action = [
                 "drink water.",
                 "eat meal/snack.",
@@ -255,8 +256,14 @@ class import_model(object):
 
 
 def run_model():
-    param = {}
 
+    data_folder = '/home/ttson/Desktop/luongworkspace/RNN-for-skeletons-predict/skeleton'
+    file_name = 'S001C001P001R001A001.skeleton'
+    db = ntu_rgbd(data_folder)
+    # db.load_skeleton_file('S011C001P028R001A034.skeleton')
+    db.save_h5_file_skeleton_list('data/subj_seq', [file_name], split='test')
+
+    param = {}
     param['tst_arr_file'] = 'data/subj_seq/array_list_test.h5'
     param['tst_lst_file'] = 'data/subj_seq/file_list_test.txt'
     param['initial_file'] = 'data/subj_seq/part_epoch1996.h5'
