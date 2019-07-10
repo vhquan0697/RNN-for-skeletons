@@ -4,7 +4,7 @@ import random
 import h5py
 # import cv2
 
-class ntu_rgbd(object):
+class kinetics(object):
     def __init__(self, data_path):
         self._data_path = data_path
 
@@ -30,27 +30,16 @@ class ntu_rgbd(object):
             if step2 != step1 and step2 != 2*step1 and step2 != 3*step1:
                 print filename, step1, step2
 
-    def cross_subject_split(self):
-        print 'cross subject evaluation ...'
-        trn_sub = [1, 2, 4, 5, 8, 9, 13, 14, 15, 16, 17, 18, 19, 25, 27, 28, 31, 34, 35,38, 45, 46, 47, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59, 70, 74, 78,80, 81, 82, 83, 84, 85, 86, 89, 91, 92, 93, 94, 95, 97, 98, 100, 103]
-        all_list = os.listdir(self._data_path)
-        trn_list = [file for file in all_list if int(file[9:12]) in trn_sub]
-        tst_list = list(set(all_list) - set(trn_list))
-        # filter file list with missing skeleton
-        trn_list = self.filter_list(trn_list)
-        tst_list = self.filter_list(tst_list)
+    def data_split(self):
+        print 'splitting data ...'
+        data_path_train = self._data_path + 'kinetics_train'
+        data_path_test = self._data_path + 'kinetics_test'
+        all_list_train = os.listdir(data_path_train)
+        all_list_test = os.listdir(data_path_test)
+        trn_list = [file for file in all_list_train]
+        tst_list = [file for file in all_list_test]
         return trn_list, tst_list
 
-    def cross_view_split(self):
-        print 'cross view evaluation ...'
-        trn_view = [2, 3]
-        all_list = os.listdir(self._data_path)
-        trn_list = [file for file in all_list if int(file[5:8]) in trn_view]
-        tst_list = list(set(all_list) - set(trn_list))
-        # filter file list with missing skeleton
-        trn_list = self.filter_list(trn_list)
-        tst_list = self.filter_list(tst_list)
-        return trn_list, tst_list
 
     def get_all_data(self):
         all_list = os.listdir(self._data_path)
@@ -181,7 +170,7 @@ class ntu_rgbd(object):
             save_name = os.path.join(save_home, 'array_list_' + split + '.h5')
             with h5py.File(save_name, 'w') as fid_h5:
                 for fn in trn_list:
-                    skeleton_set, pid_set, std_set = self.person_position_std(fn)
+                    skeleton_set, pid_set, std_set = self.person_position_std('kinetics_' + split + '/' + fn)
                     # filter skeleton by standard value
                     count = 0
                     for idx2 in xrange(len(pid_set)):
@@ -320,13 +309,14 @@ class ntu_rgbd(object):
 
 if __name__ == '__main__':
     #data_path = '/media/vhquan/APCS - Study/Thesis/Skeleton dataset/NTU RGB+D Dataset/nturgb+d_skeletons/'
-    data_path = 'E:\\Thesis\\Skeleton dataset\\NTU RGB+D Dataset\\nturgb+d_skeletons'
-    db = ntu_rgbd(data_path)
+    #data_path = '/media/vhquan/APCS - Study/Thesis/Skeleton dataset/kinetics-skeleton/'
+    data_path = '/media/vhquan/APCS - Study/Thesis/RNN-for-skeletons-predict/kinetics/'
+    db = kinetics(data_path)
     #db.load_skeleton_file('S011C001P028R001A034.skeleton')
     # db.caculate_person_height('data/seq/array_list_all_data.h5', 'data/seq/file_list_all_data.txt')
-    trn_list, tst_list = db.cross_subject_split()
-    db.save_h5_file_skeleton_list('data/subj_seq', trn_list, split='train')
-    db.save_h5_file_skeleton_list('data/subj_seq', tst_list, split='test')
+    trn_list, tst_list = db.data_split()
+    db.save_h5_file_skeleton_list('data/kinetics', trn_list, split='train')
+    db.save_h5_file_skeleton_list('data/kinetics', tst_list, split='test')
     '''trn_list, tst_list = db.cross_view_split()
     db.save_h5_file_skeleton_list('data/view_seq', trn_list, split='train')
     db.save_h5_file_skeleton_list('data/view_seq', tst_list, split='test')'''
